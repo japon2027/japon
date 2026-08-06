@@ -9,7 +9,7 @@ from zoneinfo import ZoneInfo
 TOKEN = os.environ["TOKEN"]
 CHANNEL_ID = int(os.environ["CHANNEL_ID"])
 CIBLE = datetime(2027, 4, 25, 12, 0, tzinfo=ZoneInfo("Europe/Brussels"))
-HEURE_ENVOI = time(hour=12, minute=0, tzinfo=ZoneInfo("Europe/Brussels"))
+HEURE_ENVOI = time(hour=23, minute=38, tzinfo=ZoneInfo("Europe/Brussels"))
 DOSSIER_IMGS = "imgs"                    # dossier des images dans le repo
 EXT_IMAGES = (".png", ".jpg", ".jpeg", ".gif", ".webp")
 # ──────────────────────────────────────────────────────────────────
