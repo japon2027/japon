@@ -1,94 +1,48 @@
-###### import discord
+import os
+import discord
+from discord.ext import tasks
+from datetime import datetime, time
+from zoneinfo import ZoneInfo
 
-###### from discord.ext import tasks
+# ─── CONFIGURATION (lue depuis les variables Railway) ─────────────
+TOKEN = os.environ["TOKEN"]
+CHANNEL_ID = int(os.environ["CHANNEL_ID"])
+CIBLE = datetime(2027, 4, 25, 12, 0, tzinfo=ZoneInfo("Europe/Brussels"))
+HEURE_ENVOI = time(hour=12, minute=0, tzinfo=ZoneInfo("Europe/Brussels"))
+# ──────────────────────────────────────────────────────────────────
 
-###### from datetime import datetime, time
+intents = discord.Intents.default()
+client = discord.Client(intents=intents)
 
-###### from zoneinfo import ZoneInfo
 
-###### 
+def jours_restants():
+    maintenant = datetime.now(ZoneInfo("Europe/Brussels"))
+    delta = CIBLE - maintenant
+    return delta.days
 
-###### \# ─── CONFIGURATION ────────────────────────────────────────────────
 
-###### TOKEN = "MTUzNTAzMTE2NjI5NjUyNjkxOA.Gy-Xdk.J\_NNGRjDsb7LMgJ0MUDPWT-1u4VoOxITpRQiuk"          # Token du bot (voir instructions)
+@tasks.loop(time=HEURE_ENVOI)
+async def envoi_quotidien():
+    channel = client.get_channel(CHANNEL_ID)
+    if channel is None:
+        print("Channel introuvable — vérifie CHANNEL_ID.")
+        return
 
-###### CHANNEL\_ID = japon         # ID du channel où poster
+    jours = jours_restants()
+    if jours > 1:
+        await channel.send(f"⏳ Plus que **{jours} jours** avant le 25 avril 2027 !")
+    elif jours == 1:
+        await channel.send("⏳ Plus qu'**1 jour** avant le 25 avril 2027 !")
+    elif jours == 0:
+        await channel.send("🎉 C'est aujourd'hui : **25 avril 2027** !")
+    # après la date : n'envoie plus rien
 
-###### CIBLE = datetime(2027, 4, 25, 12, 0, tzinfo=ZoneInfo("Europe/Brussels"))
 
-###### HEURE\_ENVOI = time(hour=12, minute=0, tzinfo=ZoneInfo("Europe/Brussels"))
+@client.event
+async def on_ready():
+    print(f"Connecté en tant que {client.user}")
+    if not envoi_quotidien.is_running():
+        envoi_quotidien.start()
 
-###### \# ──────────────────────────────────────────────────────────────────
 
-###### 
-
-###### intents = discord.Intents.default()
-
-###### client = discord.Client(intents=intents)
-
-###### 
-
-###### 
-
-###### def jours\_restants():
-
-###### &#x20;   maintenant = datetime.now(ZoneInfo("Europe/Brussels"))
-
-###### &#x20;   delta = CIBLE - maintenant
-
-###### &#x20;   return delta.days
-
-###### 
-
-###### 
-
-###### @tasks.loop(time=HEURE\_ENVOI)
-
-###### async def envoi\_quotidien():
-
-###### &#x20;   channel = client.get\_channel(CHANNEL\_ID)
-
-###### &#x20;   if channel is None:
-
-###### &#x20;       print("Channel introuvable — vérifie CHANNEL\_ID.")
-
-###### &#x20;       return
-
-###### 
-
-###### &#x20;   jours = jours\_restants()
-
-###### &#x20;   if jours > 1:
-
-###### &#x20;       await channel.send(f"⏳ Plus que \*\*{jours} jours\*\* avant le 25 avril 2027 !")
-
-###### &#x20;   elif jours == 1:
-
-###### &#x20;       await channel.send("⏳ Plus qu'\*\*1 jour\*\* avant le 25 avril 2027 !")
-
-###### &#x20;   elif jours == 0:
-
-###### &#x20;       await channel.send("🎉 C'est aujourd'hui : \*\*25 avril 2027\*\* !")
-
-###### &#x20;   # après la date : n'envoie plus rien
-
-###### 
-
-###### 
-
-###### @client.event
-
-###### async def on\_ready():
-
-###### &#x20;   print(f"Connecté en tant que {client.user}")
-
-###### &#x20;   if not envoi\_quotidien.is\_running():
-
-###### &#x20;       envoi\_quotidien.start()
-
-###### 
-
-###### 
-
-###### client.run(TOKEN)
-
+client.run(TOKEN)
