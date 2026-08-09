@@ -9,7 +9,7 @@ from zoneinfo import ZoneInfo
 TOKEN = os.environ["TOKEN"]
 CHANNEL_ID = int(os.environ["CHANNEL_ID"])
 CIBLE = datetime(2027, 4, 25, 12, 0, tzinfo=ZoneInfo("Europe/Brussels"))
-HEURE_ENVOI = time(hour=12, minute=6, tzinfo=ZoneInfo("Europe/Brussels"))
+HEURE_ENVOI = time(hour=12, minute=10, tzinfo=ZoneInfo("Europe/Brussels"))
 DOSSIER_IMGS = "imgs"                    # dossier des images dans le repo
 EXT_IMAGES = (".png", ".jpg", ".jpeg", ".gif", ".webp")
 
@@ -21,7 +21,7 @@ EXT_IMAGES = (".png", ".jpg", ".jpeg", ".gif", ".webp")
 RAPPELS = [
     (date(2027, 3, 25), "Shinkansen via Smart-EX"),
     (date(2026, 12, 25),  "Shibuya Sky"),
-    (data(2027,3,10), "Musée Ghibli (Mitaka)"),
+    (date(2027,3,10), "Musée Ghibli (Mitaka)"),
     # (date(2027, 4, 20), "confirmer la réservation resto"),
 ]
 # ──────────────────────────────────────────────────────────────────
