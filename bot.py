@@ -24,6 +24,12 @@ RAPPELS = [
     (date(2027,3,10), "Musée Ghibli (Mitaka)"),
     # (date(2027, 4, 20), "confirmer la réservation resto"),
 ]
+
+EXAM = [
+    (date(2026, 8, 19), "Examen d'aless : Irlande"),
+    (date(2026, 8, 19), "Examen d'aless : Histoire"),
+    (date(2026, 8, 21),  "Examen d'aless : Stage"),
+]
 # ──────────────────────────────────────────────────────────────────
 
 intents = discord.Intents.default()
@@ -36,11 +42,11 @@ def jours_restants():
     return delta.days
 
 
-def texte_rappels():
+def texte_rappels(events):
     """Construit le bloc de rappels encore valides, ou '' si aucun."""
     aujourdhui = datetime.now(ZoneInfo("Europe/Brussels")).date()
     lignes = []
-    for date_limite, quoi in RAPPELS:
+    for date_limite, quoi in events:
         jours = (date_limite - aujourdhui).days
         if jours < 0:
             continue  # date passée → on n'affiche plus ce rappel
@@ -87,7 +93,9 @@ async def envoi_quotidien():
     else:
         return  # après la date : n'envoie plus rien
 
-    texte += texte_rappels()  # ajoute les rappels sous le message (et sous la photo)
+    texte += texte_rappels(RAPPELS)  # ajoute les rappels sous le message (et sous la photo)
+
+    texte += texte_rappels(EXAM)
 
     image = image_aleatoire()
     if image is not None:
