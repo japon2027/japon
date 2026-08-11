@@ -1,7 +1,7 @@
 import os
 import random
 import discord
-from discord.ext import tasks
+from discord.ext import tasks, commands
 from datetime import datetime, date, time
 from zoneinfo import ZoneInfo
 
@@ -13,11 +13,7 @@ HEURE_ENVOI = time(hour=11, minute=14, tzinfo=ZoneInfo("Europe/Brussels"))
 DOSSIER_IMGS = "imgs"                    # dossier des images dans le repo
 EXT_IMAGES = (".png", ".jpg", ".jpeg", ".gif", ".webp")
 
-# ─── RAPPELS SUPPLÉMENTAIRES ──────────────────────────────────────
-# Ajoute/retire des lignes ici. Format :
-#   (date_limite, "ce pour quoi il faut réserver / faire qqch")
-# Le nombre de jours est calculé automatiquement.
-# Un rappel disparaît tout seul une fois sa date passée.
+# ─── RAPPELS ──────────────────────────────────────
 RAPPELS = [
     (date(2027, 3, 25), "Shinkansen via Smart-EX"),
     (date(2026, 12, 25),  "Shibuya Sky"),
@@ -109,6 +105,14 @@ async def on_ready():
     print(f"Connecté en tant que {client.user}")
     if not envoi_quotidien.is_running():
         envoi_quotidien.start()
+
+async def init_command():
+    bot = commands.Bot(command_prefix='$', intents=intents)
+
+    @bot.command()
+    async def japon(ctx):
+        envoi_quotidien.start()
+    bot.add_command(japon)
 
 
 client.run(TOKEN)
