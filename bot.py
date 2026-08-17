@@ -25,8 +25,8 @@ CIBLE = datetime(
 )
 
 HEURE_ENVOI = time(
-    hour=11,
-    minute=14,
+    hour=10,
+    minute=10,
     tzinfo=ZONE
 )
 
